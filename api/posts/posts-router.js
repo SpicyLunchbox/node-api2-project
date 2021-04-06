@@ -71,13 +71,20 @@ router.put('/:id', (req, res) => {
 
 // 5	DELETE	/api/posts/:id	Removes the post with the specified id and returns the deleted post object
 router.delete('/:id', (req, res) => {
+    
     const id = req.params.id
+    let x = {}
+    Post.findById(id)
+        .then(post => {
+            x = post
+            return x
+        })
     Post.remove(id)
         .then(post => {
             if(!post){
                 res.status(404).json({message: `The post with the specified ID does not exist`})
             }else{
-                res.status(201).json(post)
+                res.status(201).json(x)
             }
         })
         .catch(err => {
@@ -100,8 +107,5 @@ router.get('/:id/comments', (req, res) => {
             res.status(500).json({message: `The comments information could not be retrieved`})
         })
 })
-
-
-
 
 module.exports = router;
